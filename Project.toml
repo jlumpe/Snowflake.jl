@@ -1,0 +1,8 @@
+name = "Snowflake"
+uuid = "d3190047-5c60-419d-b24c-6eeb7cb63d36"
+authors = ["Jared Lumpe <mjlumpe@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+HexGrids = "958768e3-a6c4-4c00-bfc1-a372889203e3"
+Requires = "ae029012-a4dd-5104-9daa-d747884805df"

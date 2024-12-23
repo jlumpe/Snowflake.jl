@@ -124,6 +124,8 @@ function update!(model::ReiterModel)
 
 	# Update cell states
 	for z in model.shape
+		model.ct[z] == nonreceptive || (model.radius = max(model.radius, hexdist(z)))
+
 		# Boundary -> frozen transition
 		if model.ct[z] === boundary && model.s[z] >= 1
 			model.ct[z] = frozen

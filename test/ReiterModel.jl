@@ -35,6 +35,8 @@ end
 		update!(model)
 	end
 
+	radius = 0
+
 	# Check cells
 	for z in model.shape
 		ct = model.ct[z]
@@ -42,6 +44,8 @@ end
 
 		# Check frozen based on value of s
 		@test (ct == frozen) == (s >= 1)
+
+		ct == nonreceptive || (radius = max(radius, hexdist(z)))
 
 		# Check neighbors
 		has_frozen_neighbor = false
@@ -61,6 +65,8 @@ end
 			@test has_frozen_neighbor
 		end
 	end
+
+	@test model.radius == radius
 end
 
 
@@ -81,5 +87,5 @@ end
 	refresh_ct!(model)
 
 	@test model.ct == old_ct
-	# @test model.radius == old_radius
+	@test model.radius == old_radius
 end

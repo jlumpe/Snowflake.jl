@@ -1,10 +1,3 @@
-"""
-Type of cell in `ReiterModel`.
-
-- `frozen`: `s >= 1`.
-- `boundary`: Adjacent to frozen cell. `s` can increase.
-- `nonreceptive`: "empty" cell (`s == 0`).
-"""
 @enum CellType frozen boundary nonreceptive
 
 """
@@ -92,28 +85,29 @@ end
 
 
 """
-Refresh cell type array.
+Refresh cell type array and `radius` attribute.
 
 Not normally needed if starting from init! and calling update!.
 """
 function refresh_ct!(model::ReiterModel)
-	frozencells = AxialIndex[]
+	fill!(model.ct, nonreceptive)
+	radius = 0
 
 	for (z, s) in pairs(model.s)
 		if s >= 1
 			model.ct[z] = frozen
-			push!(frozencells, z)
-		else
-			model.ct[z] = nonreceptive
+			radius = max(radius, hexdist(z))
+
+			for z2 in neighbors(model.shape, z)
+				if model.ct[z2] == nonreceptive
+					model.ct[z2] = boundary
+					radius = max(radius, hexdist(z2))
+				end
+			end
 		end
 	end
 
-	for z in frozencells
-		for nz in neighbors(model.shape, z)
-			model.ct[nz] === nonreceptive && (model.ct[nz] = boundary)
-		end
-	end
-
+	model.radius = radius
 	return model
 end
 

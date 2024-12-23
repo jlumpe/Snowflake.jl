@@ -1,7 +1,6 @@
 module Snowflake
 
 using HexGrids
-using HexGrids: HexagonShape, HexagonHexArray
 
 export ReiterModel, init!, update!
 

@@ -12,12 +12,24 @@ mutable struct ReiterModel
 	const shape::HexagonShape{AxialIndex}
 	params::ReiterParams
 	t::Int
-	s::HexagonHexArray{Float64, AxialIndex}
-	snext::HexagonHexArray{Float64, AxialIndex}
-	ct::HexagonHexArray{CellType, AxialIndex}
+	"""Cell states."""
+	s::HexagonArray{Float64, Matrix{Float64}}
+	"""Temporary space for calculation of next state array."""
+	snext::HexagonArray{Float64, Matrix{Float64}}
+	"""Cell types."""
+	ct::HexagonArray{CellType, Matrix{CellType}}
+	"""Side len of hex enclosing all "receptive" cells."""
+	# radius::Int
 
 	function ReiterModel(n::Int, params=(α=0, β=0, γ=0))
-		model = new(HexagonShape(n), params, 0, HexagonHexArray{Float64}(n), HexagonHexArray{Float64}(n), HexagonHexArray{CellType}(n))
+		model = new(
+			HexagonShape(n),
+			params,
+			0,
+			HexagonArray{Float64}(n),
+			HexagonArray{Float64}(n),
+			HexagonArray{CellType}(n),
+		)
 		init!(model)
 	end
 end

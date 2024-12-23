@@ -1,16 +1,19 @@
 @enum CellType frozen boundary nonreceptive
 
 """
-α ∈ [0, 1) : Diffiusion constant (or valid up to α=2?).
+α ∈ [0, 1) : Diffusion constant (or valid up to α=2?).
 β ∈ [0, 1) : Amount of vater vapor in environment.
 γ ≥ 0 : Constant amount added to receptive cells each step?
 """
 const ReiterParams = @NamedTuple{α::Float64, β::Float64, γ::Float64}
 
+const DEFAULT_PARAMS = (α=0, β=0, γ=0)
+
 
 mutable struct ReiterModel
 	const shape::HexagonShape{AxialIndex}
 	params::ReiterParams
+	"""Time index"""
 	t::Int
 	"""Cell states."""
 	s::HexagonArray{Float64, Matrix{Float64}}
@@ -21,7 +24,7 @@ mutable struct ReiterModel
 	"""Side len of hex enclosing all "receptive" cells."""
 	# radius::Int
 
-	function ReiterModel(n::Int, params=(α=0, β=0, γ=0))
+	function ReiterModel(n::Integer, params::ReiterParams=DEFAULT_PARAMS)
 		model = new(
 			HexagonShape(n),
 			params,
@@ -33,6 +36,8 @@ mutable struct ReiterModel
 		init!(model)
 	end
 end
+
+ReiterModel(n::Integer, params) = ReiterModel(n, ReiterParams(params))
 
 
 """

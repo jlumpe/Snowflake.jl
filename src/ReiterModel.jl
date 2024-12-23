@@ -80,7 +80,7 @@ function init!(
 			# Boundary cell
 			model.ct[ix] = boundary
 			if random > 0
-				model.s[ix] = rand(Float32) * randmax
+				model.s[ix] = rand(rng, Float32) * randmax
 			end
 		end
 	end

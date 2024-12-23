@@ -29,7 +29,7 @@ mutable struct ReiterModel
 	"""Cell types."""
 	ct::HexagonArray{CellType, Matrix{CellType}}
 	"""Side len of hex enclosing all "receptive" cells."""
-	# radius::Int
+	radius::Int
 
 	function ReiterModel(n::Integer, params::ReiterParams=DEFAULT_PARAMS)
 		model = new(
@@ -67,6 +67,8 @@ function init!(
 	randmax = Float32(random)
 
 	model.t = 0
+	model.radius = n
+
 	fill!(model.s, model.params.β)
 	fill!(model.ct, nonreceptive)
 

@@ -1,5 +1,7 @@
 module Snowflake
 
+using Random
+
 using HexGrids
 
 export ReiterModel, init!, update!

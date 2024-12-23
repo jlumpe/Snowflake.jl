@@ -42,18 +42,40 @@ ReiterModel(n::Integer, params) = ReiterModel(n, ReiterParams(params))
 
 """
 (Re)initialize the model state.
+
+# Arguments
+- `model`
+- `n::Integer`: Size of initial hexagon of frozen cells at center.
+- `random::Real`: If >0, init `s` of boundary cells with random value between 0 and this number.
+- `rng`: RNG to use.
 """
-function init!(model::ReiterModel)
+function init!(
+	model::ReiterModel,
+	n::Integer=1;
+	random::Real=0,
+	rng::Random.AbstractRNG=Random.GLOBAL_RNG,
+	)
+
+	n < 0 && error("n must be nonnegative")
+	randmax = Float32(random)
+
 	model.t = 0
-
-	o = AxialIndex()
 	fill!(model.s, model.params.β)
-	model.s[o] = 1
-
 	fill!(model.ct, nonreceptive)
-	model.ct[o] = frozen
-	for z in neighbors(o)
-		model.ct[z] = boundary
+
+	for ix in HexagonShape(n + 1)
+		ix in model.shape || continue
+		if hexdist(ix) < n
+			# Inner cell
+			model.s[ix] = 1
+			model.ct[ix] = frozen
+		else
+			# Boundary cell
+			model.ct[ix] = boundary
+			if random > 0
+				model.s[ix] = rand(Float32) * randmax
+			end
+		end
 	end
 
 	return model

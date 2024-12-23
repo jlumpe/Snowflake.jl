@@ -1,3 +1,10 @@
+"""
+Type of cell in `ReiterModel`.
+
+- `frozen`: `s >= 1`.
+- `boundary`: Adjacent to frozen cell. `s` can increase.
+- `nonreceptive`: "empty" cell (`s == 0`).
+"""
 @enum CellType frozen boundary nonreceptive
 
 """
